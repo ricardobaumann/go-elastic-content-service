@@ -41,7 +41,7 @@ func main() {
 	}()
 
 	// content endpoint
-	contentService := content.NewService(content.NewRepository(nil))
+	contentService := content.NewService(content.NewRepository())
 	contentService = content.NewTracing(contentService)
 	contentHandler := content.NewHandler(contentService)
 

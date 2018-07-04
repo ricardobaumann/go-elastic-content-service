@@ -5,5 +5,6 @@ type contentRequest struct {
 }
 
 type contentResponse struct {
-	ID string `json:"id"`
+	ID   string `json:"id"`
+	Body string `json:"body"`
 }
