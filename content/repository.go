@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"os"
 
+	"encoding/json"
+
 	"github.com/olivere/elastic"
+
+	logger "github.com/ricardo-ch/go-logger"
 )
 
 //Data ...
@@ -29,10 +33,12 @@ func (r repository) Get(ID string) (contentResponse, error) {
 	//r.DB.Get(&your_db_object,"your_sql_query",your_params1, ...)
 	result, err := r.esCli.Get().Index("contents").Id(ID).Do(context.Background())
 	if err != nil {
-		fmt.Print("error")
+		return contentResponse{ID: "", Body: ""}, err
 	}
 
-	fmt.Print(result.Source)
+	logger.Info(result.Id)
 
-	return contentResponse{ID}, nil
+	j, _ := json.Marshal(result.Source)
+
+	return contentResponse{ID: ID, Body: string(j)}, nil
 }
