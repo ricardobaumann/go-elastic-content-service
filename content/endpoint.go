@@ -2,7 +2,10 @@ package content
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	logger "github.com/ricardo-ch/go-logger"
 )
@@ -34,6 +37,32 @@ func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusInternalServerError)
 			}
 		}
+	}
+
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		logger.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
+func (h Handler) Put(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	body, error := ioutil.ReadAll(r.Body)
+	if error != nil {
+		return
+	}
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var result interface{}
+
+	result, err := h.Service.Save(r.Context(), contentInput{ID: id, Body: string(body)})
+	if err != nil {
+		logger.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 
 	if err := json.NewEncoder(w).Encode(result); err != nil {

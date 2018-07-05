@@ -16,3 +16,7 @@ func NewService(r Repository) Service {
 func (s service) Get(ctx context.Context, obj contentRequest) (contentResponse, error) {
 	return s.Repository.Get(obj.ID)
 }
+
+func (s service) Save(ctx context.Context, obj contentInput) (contentResponse, error) {
+	return s.Repository.Save(obj.ID, obj.Body)
+}

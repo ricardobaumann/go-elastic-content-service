@@ -29,3 +29,16 @@ func (s contentTracing) Get(ctx context.Context, obj contentRequest) (response c
 
 	return s.next.Get(ctx, obj)
 }
+
+// Get ...
+func (s contentTracing) Save(ctx context.Context, obj contentInput) (response contentResponse, err error) {
+	span, ctx := tracing.CreateSpan(ctx, "content.service::Save", &map[string]interface{}{"id": obj.ID})
+	defer func() {
+		if err != nil {
+			tracing.SetSpanError(span, err)
+		}
+		span.Finish()
+	}()
+
+	return s.next.Save(ctx, obj)
+}
