@@ -27,6 +27,15 @@ func NewRepository() Repository {
 	return repository{esCli: client}
 }
 
+func (r repository) Save(ID string, body string) (contentResponse, error) {
+	result, err := r.esCli.Index().Index("contents").Type("1").BodyString(body).Id(ID).Do(context.Background())
+	if err != nil {
+		return contentResponse{ID: "", Body: ""}, err
+	}
+	logger.Info(string(result.Status))
+	return contentResponse{ID: ID, Body: body}, nil
+}
+
 func (r repository) Get(ID string) (contentResponse, error) {
 
 	//you can add your logic for database
