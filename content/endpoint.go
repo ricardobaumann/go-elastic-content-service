@@ -46,6 +46,28 @@ func (h Handler) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (h Handler) Delete(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	var result interface{}
+	var err error
+
+	result, err = h.Service.Delete(r.Context(), contentRequest{ID: id})
+	if err != nil {
+		logger.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	if err := json.NewEncoder(w).Encode(result); err != nil {
+		logger.Error(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+}
+
 func (h Handler) Put(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 

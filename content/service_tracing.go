@@ -42,3 +42,16 @@ func (s contentTracing) Save(ctx context.Context, obj contentInput) (response co
 
 	return s.next.Save(ctx, obj)
 }
+
+// Delete ...
+func (s contentTracing) Delete(ctx context.Context, obj contentRequest) (response contentResponse, err error) {
+	span, ctx := tracing.CreateSpan(ctx, "content.service::Delete", &map[string]interface{}{"id": obj.ID})
+	defer func() {
+		if err != nil {
+			tracing.SetSpanError(span, err)
+		}
+		span.Finish()
+	}()
+
+	return s.next.Delete(ctx, obj)
+}

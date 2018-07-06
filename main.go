@@ -65,6 +65,7 @@ func main() {
 		router.Handle("/content/", tracing.HTTPMiddleware("content-handler", http.HandlerFunc(contentHandler.Get))).Methods("GET")
 
 		router.Handle("/content/{id}", tracing.HTTPMiddleware("content-handler", http.HandlerFunc(contentHandler.Put))).Methods("PUT")
+		router.Handle("/content/{id}", tracing.HTTPMiddleware("content-handler", http.HandlerFunc(contentHandler.Delete))).Methods("DELETE")
 
 		httpServer := &http.Server{
 			Addr:    httpAddr,

@@ -51,3 +51,17 @@ func (r repository) Get(ID string) (contentResponse, error) {
 
 	return contentResponse{ID: ID, Body: string(j)}, nil
 }
+
+func (r repository) Delete(ID string) (contentResponse, error) {
+
+	//you can add your logic for database
+	//r.DB.Get(&your_db_object,"your_sql_query",your_params1, ...)
+	result, err := r.esCli.Delete().Index("contents").Type("1").Id(ID).Do(context.Background())
+	if err != nil {
+		return contentResponse{ID: "", Body: ""}, err
+	}
+
+	logger.Info(result.Id)
+
+	return contentResponse{ID: ID, Body: ""}, nil
+}
